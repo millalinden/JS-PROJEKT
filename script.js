@@ -61,6 +61,10 @@ window.onload = function () {
     setGame();
 }
 
+function setGame() {
+    clearBoard();
+}
+
 // How the board will look before playing
 function setGame() {
     // Clear existing board
