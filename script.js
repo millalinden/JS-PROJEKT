@@ -2,7 +2,7 @@
 
 let numSelected = null;
 let tileSelected = null;
-let currentLevel = "easy"; // Default level is easy
+let currentLevel = "easy";
 
 let errors = 0;
 
@@ -17,7 +17,7 @@ let board = [
     "9-4-7---2",
     "67-83----",
     "81--45---"
-];
+]
 // Easy level solution
 let solution = [
     "387491625",
@@ -29,7 +29,7 @@ let solution = [
     "934176852",
     "675832941",
     "812945763"
-];
+]
 
 // Hard level
 let boardHard = [
@@ -42,7 +42,7 @@ let boardHard = [
     "5------7-",
     "7--5-89--",
     "6----95-4"
-];
+]
 
 // Hard level solution
 let solutionHard = [
@@ -55,17 +55,21 @@ let solutionHard = [
     "529314678",
     "743568921",
     "681729534"
-];
+]
 
 // When page reload --> the game should be set
 window.onload = function () {
     setGame();
-};
+}
+
+function setGame() {
+    clearBoard();
+}
 
 // How the board will look before playing
 function setGame() {
-    clearBoard();
-    clearDigits();
+    // Clear existing board
+    document.getElementById("board").innerHTML = "";
     
     // Digits 1-9
     for (let i = 1; i <= 9; i++) {
@@ -78,17 +82,13 @@ function setGame() {
         document.getElementById("digits").appendChild(number);
     }
 
-    // Select board based on the current level
-    let currentBoard = currentLevel === "easy" ? board : boardHard;
-    let currentSolution = currentLevel === "easy" ? solution : solutionHard;
-
     // Board 9x9
     for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
             let tile = document.createElement("div");
             tile.id = r.toString() + "-" + c.toString();
-            if (currentBoard[r][c] != "-") {
-                tile.innerText = currentBoard[r][c];
+            if (board[r][c] != "-") {
+                tile.innerText = board[r][c];
                 tile.classList.add("tile-start");
             }
             if (r == 2 || r == 5) {
@@ -104,31 +104,116 @@ function setGame() {
     }
 }
 
-// Clear existing board
 function clearBoard() {
     document.getElementById("board").innerHTML = "";
 }
 
-// Clear digits container
+// How to interact with the numbers, adds style when clicked 
+function selectNumber() {
+    if (numSelected != null) {
+        numSelected.classList.remove("number-selected");
+    }
+    numSelected = this;
+    numSelected.classList.add("number-selected");
+
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            let tile = document.getElementById(r.toString() + "-" + c.toString());
+            if (tile.innerText === numSelected.id) {
+                tile.classList.add("selected-number");
+            } else {
+                tile.classList.remove("selected-number");
+            }
+        }
+    }
+}
+
+function selectTile() {
+    if (numSelected) {
+        if (this.innerText != "") {
+            return;
+        }
+
+        // "0-0" "0-1"
+        let coords = this.id.split("-"); // ["0", "0"]
+        let r = parseInt(coords[0]);
+        let c = parseInt(coords[1]);
+
+        if (solution[r][c] == numSelected.id) {
+            this.innerText = numSelected.id;
+        } else {
+            errors++;
+            document.getElementById("errors").innerText = errors;
+        }
+    }
+}
+
+function setGameHard() {
+    clearBoard();
+    clearDigits();
+    // Clear existing board
+    document.getElementById("board").innerHTML = "";
+    
+    // Digits 1-9
+    for (let i = 1; i <= 9; i++) {
+        let number = document.createElement("div");
+        number.id = i;
+        number.textContent = i;
+        number.addEventListener("click", selectNumber);
+        number.classList.add("number");
+        document.getElementById("digits").appendChild(number);
+    }
+
+    // Board 9x9
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            let tile = document.createElement("div");
+            tile.id = r.toString() + "-" + c.toString();
+            if (boardHard[r][c] != "-") {
+                tile.innerText = boardHard[r][c];
+                tile.classList.add("tile-start");
+            }
+            if (r == 2 || r == 5) {
+                tile.classList.add("horizontal-line");
+            }
+            if (c == 2 || c == 5) {
+                tile.classList.add("vertical-line");
+            }
+            tile.addEventListener("click", selectTileHard);
+            tile.classList.add("tile");
+            document.getElementById("board").append(tile);
+        }
+    }
+
+    // Reset errors count
+    errors = 0;
+    document.getElementById("errors").innerText = errors;
+}
+
+function selectTileHard() {
+    if (numSelected) {
+        if (this.innerText != "") {
+            return;
+        }
+
+        // "0-0" "0-1"
+        let coords = this.id.split("-"); // ["0", "0"]
+        let r = parseInt(coords[0]);
+        let c = parseInt(coords[1]);
+
+        if (solutionHard[r][c] == numSelected.id) {
+            this.innerText = numSelected.id;
+        } else {
+            errors++;
+            document.getElementById("errors").innerText = errors;
+        }
+    }
+}
+
+
 function clearDigits() {
     document.getElementById("digits").innerHTML = "";
 }
 
-// How to interact with the numbers, adds style when clicked
-function selectNumber() {
-    // Your existing code for selecting numbers
-}
-
-function selectTile() {
-    // Your existing code for selecting tiles
-}
-
-// Toggle between easy and hard levels
-function toggleLevel() {
-    currentLevel = currentLevel === "easy" ? "hard" : "easy";
-    setGame();
-}
-
-// Add click event listener to the toggle button
 let toggleEl = document.querySelector("#toggle");
-toggleEl.addEventListener("click", toggleLevel);
+toggleEl.addEventListener("click", setGameHard);
