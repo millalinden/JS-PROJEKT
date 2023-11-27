@@ -103,6 +103,10 @@ function setGame() {
     }
 }
 
+function clearBoard() {
+    document.getElementById("board").innerHTML = "";
+}
+
 // How to interact with the numbers, adds style when clicked 
 function selectNumber() {
     if (numSelected != null) {
