@@ -148,6 +148,7 @@ function selectTile() {
 }
 
 function setGameHard() {
+    clearBoard();
     // Clear existing board
     document.getElementById("board").innerHTML = "";
     
