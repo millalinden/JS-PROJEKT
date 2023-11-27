@@ -149,6 +149,7 @@ function selectTile() {
 
 function setGameHard() {
     clearBoard();
+    clearDigits();
     // Clear existing board
     document.getElementById("board").innerHTML = "";
     
@@ -206,6 +207,11 @@ function selectTileHard() {
             document.getElementById("errors").innerText = errors;
         }
     }
+}
+
+
+function clearDigits() {
+    document.getElementById("digits").innerHTML = "";
 }
 
 let toggleEl = document.querySelector("#toggle");
