@@ -2,7 +2,7 @@
 
 
 let numSelected = null;
-let tileSelcted = null;
+let tileSelected = null;
 
 let errors = 0;
 
@@ -49,9 +49,6 @@ function setGame() {
         document.getElementById("digits").appendChild(number);
     }
 
-// digits
-// if 
-
     // Board 9x9
 
     for (let r = 0; r < 9; r++) {
@@ -84,10 +81,15 @@ function selectNumber(){
     numSelected = this;
     numSelected.classList.add("number-selected");
 
-    // condition that make button not clickable when all the numbers are out on the board
-    if (!isNumberAvailable(numSelected.id)) {
-        numSelected.removeEventListener("click", selectNumber);
-        numSelected.classList.add("number-disabled");
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            let tile = document.getElementById(r.toString() + "-" + c.toString());
+            if (tile.innerText === numSelected.id) {
+                tile.classList.add("selected-number");
+            } else {
+                tile.classList.remove("selected-number");
+            }
+        }
     }
 }
 
@@ -109,6 +111,8 @@ function selectTile() {
             errors++;
             document.getElementById("errors").innerText = errors;
         }
+        
     }
 }
+
 
